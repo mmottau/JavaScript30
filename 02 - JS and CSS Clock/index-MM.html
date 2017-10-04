@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS + CSS Clock</title>
+</head>
+<body>
+
+
+    <div class="clock">
+      <div class="clock-face">
+        <div class="hand hour-hand"></div>
+        <div class="hand min-hand"></div>
+        <div class="hand second-hand"></div>
+      </div>
+    </div>
+
+
+  <style>
+    html {
+      background:#018DED url(http://unsplash.it/1500/1000?image=881&blur=50);
+      background-size:cover;
+      font-family:'helvetica neue';
+      text-align: center;
+      font-size: 10px;
+    }
+
+    body {
+      margin: 0;
+      font-size: 2rem;
+      display:flex;
+      flex:1;
+      min-height: 100vh;
+      align-items: center;
+    }
+
+    .clock {
+      width: 30rem;
+      height: 30rem;
+      border:20px solid white;
+      border-radius:50%;
+      margin:50px auto;
+      position: relative;
+      padding:2rem;
+      box-shadow:
+        0 0 0 4px rgba(0,0,0,0.1),
+        inset 0 0 0 3px #EFEFEF,
+        inset 0 0 10px black,
+        0 0 10px rgba(0,0,0,0.2);
+    }
+
+    .clock-face {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform: translateY(-3px); /* account for the height of the clock hands */
+    }
+
+    .hand {
+      width:50%;
+      height:6px;
+      background:black;
+      position: absolute;
+      top: 50%;
+      transform-origin: right;
+    }
+
+    .hour-hand {
+      width: 40%;
+      left: 10%;
+    }
+
+    .second-hand {
+      height: 3px;
+    }
+
+  </style>
+  
+
+
+  <script>
+    (function() {
+      
+      clock = {
+        init: function init() {
+          this.hourHand = document.querySelector('.hour-hand');
+          this.minHand = document.querySelector('.min-hand');
+          this.secondHand = document.querySelector('.second-hand');          
+          this.date = new Date();
+          this.hours = this.date.getHours(); // 0-23
+          this.minutes = this.date.getMinutes(); // 0-59
+          this.seconds = this.date.getSeconds(); // 0-59
+
+          // Calculate time in degrees for clock
+          this.seconds = this.calcSecondsAndMins(this.seconds);
+          this.minutes = this.calcSecondsAndMins(this.minutes);
+          this.hours = this.calcHrs(this.hours);
+
+          // Set initial time
+          this.secondHand.style.transform = 'rotate(' + this.seconds + 'deg)';
+          this.minHand.style.transform = 'rotate(' + this.minutes + 'deg)';
+          this.hourHand.style.transform = 'rotate(' + this.hours + 'deg)';
+
+
+          setInterval(() => {
+            this.secondHand.style.transform = 'rotate(' + this.updateSeconds(this.seconds) + 'deg)'; 
+            this.minHand.style.transform = 'rotate(' + this.updateMins(this.minutes) + 'deg)';
+            this.hourHand.style.transform = 'rotate(' + this.updateHours(this.hours) + 'deg)';
+
+          }, 1000);
+
+        },
+        calcSecondsAndMins: function calcSecondsAndMins (sec) {
+          return sec * 6 + 90;
+        },
+        calcHrs: function calcHrs (hr) {
+          let hour12 = (hr > 12) ? hr-12 : hr;
+          return hour12 * 30 + 90;
+        },
+        updateSeconds: function updateSeconds (seconds) {
+          this.seconds = seconds + (360/60); // 360 deg/ 60 s = 6 deg per sec
+          return this.seconds;
+        },
+        updateHours: function updateHours (hrs) {
+         this.hours = hrs + (360/12/60/60);//360 deg / 12 hr / 60 min / 60 s = 0.008333 deg per sec
+         return this.hours;
+        },
+        updateMins: function updateMins (minutes) {
+          this.minutes = minutes + (360/60/60); // 360 deg / 60min / 60s = 0.1 deg per sec
+          return this.minutes; 
+        }
+      };
+
+      clock.init();
+
+    })();
+
+  </script>
+</body>
+</html>

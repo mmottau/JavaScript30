@@ -58,60 +58,43 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+  (function(){
 
-  (function() {
-
-    const drumKit = {
-      init: function init() {
-        this.audio = document.querySelectorAll('audio');
+    const Drumkit = {
+      init: function () {
         this.keys = document.querySelectorAll('.key');
 
         this.onKeyPress = this.onKeyPress.bind(this);
         this.addEventListeners = this.addEventListeners.bind(this);
-        this.index = 0;
 
-        this.addEventListeners();
+        this.addEventListeners();   
+
       },
-      addEventListeners: function addEventListeners () {
+      addEventListeners: function addEventListeners() {
         document.addEventListener('keypress', this.onKeyPress);
-
-        this.audio.forEach((el) => {
-          el.addEventListener('play', function(evt) {
-            let key = document.querySelector('.key[data-key="' + evt.target.getAttribute('data-key') + '"]');
-
-            key.classList.add('playing');
-
+        
+        this.keys.forEach(function(el){
+          el.addEventListener('transitionend', function(evt) {
+            evt.currentTarget.classList.remove("playing");
           });
         });
-
-        this.keys.forEach((el) => {
-          el.addEventListener('transitionend', (evt) => {
-            evt.target.classList.remove('playing');
-          });
-        })
-
+        
       },
       onKeyPress: function onKeyPress(evt) {
-        let keyCodeCap = evt.keyCode - 32;
+        let keyCode = evt.keyCode - 32;
+        let key = document.querySelector('.key[data-key="' + keyCode +'"]');
+        let sound = document.querySelector('audio[data-key="' + keyCode +'"]');
 
-        this.audio.forEach((el) => {
-          if (parseInt(el.getAttribute('data-key'), 10) === keyCodeCap) {
-            el.stop();
-            el.play();
-          } 
-        });
+        key.classList.add("playing");
+
+        sound.currentTime = 0;
+        sound.play();
       },
-    }
+    };
 
-   
-  HTMLAudioElement.prototype.stop = function() {
-    this.pause();
-    this.currentTime = 0.0;
-  }
-
-    drumKit.init();
-
-  })();
+    Drumkit.init();
+    
+  }());
 </script>
 
 

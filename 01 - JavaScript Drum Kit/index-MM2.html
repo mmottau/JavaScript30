@@ -58,42 +58,49 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
-  (function(){
+  (function() {
 
     const Drumkit = {
-      init: function () {
+      init: function init() {
         this.keys = document.querySelectorAll('.key');
 
-        this.onKeyPress = this.onKeyPress.bind(this);
+        this.onKeyDown = this.onKeyDown.bind(this);
         this.addEventListeners = this.addEventListeners.bind(this);
+        this.removeTransition = this.removeTransition.bind(this);
 
-        this.addEventListeners();   
+        this.addEventListeners();
 
       },
       addEventListeners: function addEventListeners() {
-        document.addEventListener('keypress', this.onKeyPress);
-        
-        this.keys.forEach(function(el){
-          el.addEventListener('transitionend', function(evt) {
-            evt.currentTarget.classList.remove("playing");
-          });
-        });
-        
-      },
-      onKeyPress: function onKeyPress(evt) {
-        let keyCode = evt.keyCode - 32;
-        let key = document.querySelector('.key[data-key="' + keyCode +'"]');
-        let sound = document.querySelector('audio[data-key="' + keyCode +'"]');
+        document.addEventListener('keydown', this.onKeyDown);
 
-        key.classList.add("playing");
+        this.keys.forEach(key => key.addEventListener('transitionend', this.removeTransition));
+
+      },
+      onKeyDown: function onKeyPress(evt) {
+        let keyCode = evt.keyCode;
+        let key = document.querySelector(`.key[data-key="${keyCode}"]`);
+        let sound = document.querySelector(`audio[data-key="${keyCode}"]`);
+
+        // stop the function if we don't have a sound to play
+        if (!sound) return;
+
+        key.classList.add('playing');
 
         sound.currentTime = 0;
         sound.play();
       },
+      removeTransition: function removeTransition(evt) {
+
+        // Only proceed for transform transition; ignore others
+        if (evt.propertyName !== 'transform') return;
+
+        evt.target.classList.remove('playing');
+      }
     };
 
     Drumkit.init();
-    
+
   }());
 </script>
 

@@ -75,59 +75,58 @@
     }
 
   </style>
-  
+
 
 
   <script>
     (function() {
-      
-      clock = {
+
+      const clock = {
         init: function init() {
           this.hourHand = document.querySelector('.hour-hand');
           this.minHand = document.querySelector('.min-hand');
-          this.secondHand = document.querySelector('.second-hand');          
+          this.secondHand = document.querySelector('.second-hand');
           this.date = new Date();
           this.hours = this.date.getHours(); // 0-23
           this.minutes = this.date.getMinutes(); // 0-59
           this.seconds = this.date.getSeconds(); // 0-59
 
-          // Calculate time in degrees for clock
+          // Calculate time in degrees
           this.seconds = this.calcSecondsAndMins(this.seconds);
           this.minutes = this.calcSecondsAndMins(this.minutes);
           this.hours = this.calcHrs(this.hours);
 
           // Set initial time
-          this.secondHand.style.transform = 'rotate(' + this.seconds + 'deg)';
-          this.minHand.style.transform = 'rotate(' + this.minutes + 'deg)';
-          this.hourHand.style.transform = 'rotate(' + this.hours + 'deg)';
+          this.secondHand.style.transform = `rotate(${this.seconds}deg)`;
+          this.minHand.style.transform = `rotate(${this.minutes}deg)`;
+          this.hourHand.style.transform = `rotate(${this.hours}deg)`;
 
-
+          // Keep it up-to-date
           setInterval(() => {
-            this.secondHand.style.transform = 'rotate(' + this.updateSeconds(this.seconds) + 'deg)'; 
-            this.minHand.style.transform = 'rotate(' + this.updateMins(this.minutes) + 'deg)';
-            this.hourHand.style.transform = 'rotate(' + this.updateHours(this.hours) + 'deg)';
-
+            this.secondHand.style.transform = `rotate(${this.updateSeconds(this.seconds)}deg)`;
+            this.minHand.style.transform = `rotate(${this.updateMins(this.minutes)}deg)`;
+            this.hourHand.style.transform = `rotate(${this.updateHours(this.hours)}deg)`;
           }, 1000);
 
         },
-        calcSecondsAndMins: function calcSecondsAndMins (sec) {
+        calcSecondsAndMins: function calcSecondsAndMins(sec) {
           return sec * 6 + 90;
         },
-        calcHrs: function calcHrs (hr) {
-          let hour12 = (hr > 12) ? hr-12 : hr;
+        calcHrs: function calcHrs(hr) {
+          let hour12 = (hr > 12) ? hr - 12 : hr;
           return hour12 * 30 + 90;
         },
-        updateSeconds: function updateSeconds (seconds) {
-          this.seconds = seconds + (360/60); // 360 deg/ 60 s = 6 deg per sec
+        updateSeconds: function updateSeconds(seconds) {
+          this.seconds = seconds + (360 / 60); // 360 deg/ 60 s = 6 deg per sec
           return this.seconds;
         },
-        updateHours: function updateHours (hrs) {
-         this.hours = hrs + (360/12/60/60);//360 deg / 12 hr / 60 min / 60 s = 0.008333 deg per sec
-         return this.hours;
+        updateHours: function updateHours(hrs) {
+          this.hours = hrs + (360 / 12 / 60 / 60);//360 deg / 12 hr / 60 min / 60 s = 0.008333 deg per sec
+          return this.hours;
         },
-        updateMins: function updateMins (minutes) {
-          this.minutes = minutes + (360/60/60); // 360 deg / 60min / 60s = 0.1 deg per sec
-          return this.minutes; 
+        updateMins: function updateMins(minutes) {
+          this.minutes = minutes + (360 / 60 / 60); // 360 deg / 60min / 60s = 0.1 deg per sec
+          return this.minutes;
         }
       };
 

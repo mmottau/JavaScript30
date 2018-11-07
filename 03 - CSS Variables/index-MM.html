@@ -26,6 +26,12 @@
       misc styles, nothing to do with CSS variables
     */
 
+    :root {
+      --blur: 10px;
+      --base: #ffc600;
+      --spacing: 10px; 
+    }
+
     body {
       text-align: center;
       background: #193549;
@@ -42,9 +48,58 @@
     input {
       width:100px;
     }
+
+    .hl {
+      color: var(--base);
+    }
+
+    img {
+     filter: blur(var(--blur));
+     background: var(--base);
+     padding: var(--spacing);
+    }
+
   </style>
 
   <script>
+
+    (function() {
+      const cssVariables = {
+        init: function init () {
+          this.spacingControl = document.getElementById('spacing');
+          this.blurControl = document.getElementById('blur');
+          this.baseControl = document.getElementById('base');
+
+          this.addEventListeners();
+
+        },
+        addEventListeners: function addEventListeners () {
+          this.spacingControl.addEventListener('input', this.updateSpacing);
+          this.blurControl.addEventListener('input', this.updateBlur);
+          this.baseControl.addEventListener('input', this.updateBase);
+        },
+
+        updateSpacing: function updateSpacing (evt) {
+          const itemValue = evt.target.value;
+          const itemSizing = event.target.getAttribute('data-sizing');
+
+          document.documentElement.style.setProperty('--spacing', itemValue + itemSizing); 
+        },
+        updateBlur: function updateBlur (evt) {
+          const itemValue = evt.target.value;
+          const itemSizing = event.target.getAttribute('data-sizing');
+
+          document.documentElement.style.setProperty('--blur', itemValue + itemSizing); 
+        },
+        updateBase: function updateBase (evt) {
+          const itemValue = evt.target.value;
+          console.log(event.target.getAttribute('data-sizing'));
+          document.documentElement.style.setProperty('--base', itemValue); 
+        }
+      }
+
+      cssVariables.init();
+    })();
   </script>
 
 </body>

@@ -24,6 +24,7 @@
     .panels {
       min-height:100vh;
       overflow: hidden;
+      display: flex;
     }
 
     .panel {
@@ -41,6 +42,10 @@
       font-size: 20px;
       background-size:cover;
       background-position:center;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
 
@@ -56,6 +61,14 @@
       transition:transform 0.5s;
     }
 
+    /*.panel p:first-child {
+      transform: translateY(-100%);
+    }
+
+    .panel p:last-child {
+      transform: translateY(200%);
+    }*/
+    
     .panel p {
       text-transform: uppercase;
       font-family: 'Amatic SC', cursive;
@@ -68,6 +81,15 @@
 
     .panel.open {
       font-size:40px;
+      flex: 2;
+    }
+
+    .panel.open.active p:first-child {
+      transform: translateY(100%);    
+    }
+
+    .panel.open.active p:last-child {
+      transform: translateY(-100%);
     }
 
   </style>
@@ -102,6 +124,30 @@
   </div>
 
   <script>
+    (function() {
+      const flexBox = {
+        init: function init() {
+          this.panels = document.querySelectorAll('.panel');
+
+          this.onPanelClick = this.onPanelClick.bind(this);
+          this.addEventListeners();
+        },
+        addEventListeners: function addEventListeners() {
+          this.panels.forEach((panel) => panel.addEventListener('click', this.onPanelClick));
+          this.panels.forEach((panel) => panel.addEventListener('transitionend', this.onPanelTransitionEnd));
+        },
+        onPanelClick: function onPanelClick(evt) {
+          evt.target.classList.toggle('open');
+        },
+        onPanelTransitionEnd: function onPanelTransitionEnd(evt) {
+          console.log(evt.propertyName);
+          if(evt.propertyName === 'flex-grow' || evt.propertyName === 'flex') {
+            evt.target.classList.toggle('active');
+          }
+        }
+      }
+      flexBox.init();
+    })();
 
   </script>
 
